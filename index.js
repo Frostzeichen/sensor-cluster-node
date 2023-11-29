@@ -1,4 +1,4 @@
-import http from "http";
+import { request } from "./controllers/sensorRequests";
 import "dotenv/config"
 
 const delay = (time) => {
@@ -6,30 +6,6 @@ const delay = (time) => {
 }
 
 const addresses = [process.env.MCU_1]
-
-const request = (ip) => {
-    const options = { 
-        hostname: ip, 
-        path: "/", 
-        method: "GET"
-    }
-
-    return new Promise ((resolve, reject) => {
-        http.request(options, (res) => { 
-            let data = "";
-                
-            res.on("data", (chunk) => { 
-                data += chunk; 
-            });
-            res.on("end", () => { 
-                resolve(JSON.parse(data));
-            });
-                
-        }).on("error", (err) => { 
-            reject(console.log("Error: ", err));
-        }).end();
-    })
-}
 
 const main = async () => {
     let dataCache = [];
