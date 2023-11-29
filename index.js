@@ -1,9 +1,8 @@
-import { request } from "./controllers/sensorRequests";
+import { request } from "./controllers/sensorRequests.js";
+import { delay } from "./controllers/time.js";
 import "dotenv/config"
 
-const delay = (time) => {
-    return new Promise(resolve => setTimeout(resolve, time));
-}
+
 
 const addresses = [process.env.MCU_1]
 
