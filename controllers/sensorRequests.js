@@ -1,6 +1,6 @@
 import http from "http";
 
-export const request = (ip) => {
+export const request = (ip) => { // TODO: Add a way to find out whether the MCU is present or not, and return a message that the MCU is offline.
     const options = { 
         hostname: ip, 
         path: "/", 
@@ -12,7 +12,7 @@ export const request = (ip) => {
             let data = "";
                 
             res.on("data", (chunk) => { 
-                data += chunk; 
+                data += chunk;
             });
             res.on("end", () => { 
                 resolve(JSON.parse(data));
