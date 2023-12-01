@@ -15,11 +15,13 @@ export const request = (ip) => { // TODO: Add a way to find out whether the MCU 
                 data += chunk;
             });
             res.on("end", () => { 
-                resolve(JSON.parse(data));
+                let output = JSON.parse(data);
+                output["timestamp"] = new Date();
+                resolve(output);
             });
                 
         }).on("error", (err) => { 
             reject(console.log("Error: ", err));
         }).end();
-    })
+    }).catch(() => {console.log("Controller is offline")})
 }

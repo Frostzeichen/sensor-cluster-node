@@ -5,29 +5,31 @@ import "dotenv/config"
 
 const addresses = [process.env.MCU_1]
 
-const main = async () => {
+const main = async (cycleLimit) => {
     let dataCache = [];
     let cycles = 0;
 
     for (;;) {
         for (let i = 0; i < addresses.length; i++) {
-            request(addresses[i]).then((data) => {
-                data["timestamp"] = new Date();
-                return dataCache.push(data)
-            });
+            request(addresses[i]).then((data) => dataCache.push(data));
         }
 
-        if (cycles == 3) { // One cycle is designed for roughly 1 second
-            console.log("Saving...")
-            addNewReading(dataCache);
-            dataCache = [];
+        if (cycles == cycleLimit) { // One cycle is designed for roughly 1 second
+            console.log("Saving...");
+            if (dataCache.length > 0) {
+                addNewReading(dataCache);
+                console.log("Saved to database!");
+            } else {
+                console.log("Cache is empty. Waiting for new data.");
+                console.log("PS. Are there any controllers online?");
+            }
             getAll();
             cycles = 0;
-            console.log("Done!");
+            dataCache = [];
         } else cycles++;
 
         console.log(`Cycles: ${cycles}`);
         await delay(process.env.INTERVAL);
     }
 }
-main();
+main(process.env.CYCLES);
